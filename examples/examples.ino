@@ -15,6 +15,8 @@
 // 2 Set Data Reporting Mode to ActiveReporting(DEFAULT), to QueryReporting
 // 3 -
 // 4 Read PM QueryDataCommand, Read
+//   read_q for query mode
+//   read_a for active mode
 // 5 Set DeviceID 0xFF = just read
 // 6 Set Sleep set Work(DEFAULT)
 // 7 CheckFirmwareVersion
