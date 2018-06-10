@@ -20,6 +20,8 @@ Similar and maybe more elegant implementations are found on
 
 https://github.com/kadamski/arduino_sds011
 
+https://github.com/Zanop/SDS011/tree/more-sensor-modes
+
 https://github.com/gitpeut/SDS021
 
 https://github.com/lewapek/sds-dust-sensors-arduino-library
