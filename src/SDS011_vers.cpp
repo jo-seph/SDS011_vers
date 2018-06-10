@@ -92,35 +92,34 @@ static byte data_reporting_mode_query_SDS_cmd[19] = {
 int SDS011_vers::SetDataReportingMode(int *queryset, int *activequery, int *DevID1c, int *DevID2c, int *querysetr, int *activequeryr, int *DevID1r, int *DevID2r)
 {
 
-  bool DEBUG2 = false;
 
-  if (DEBUG2 == true) {
+#ifdef DEBUG2
     Serial.println(" ");
 
     Serial.println("_Begin Queryactive Main Function_");
     Serial.print("queryset "); Serial.print(*queryset, HEX); Serial.print("  activequery "); Serial.println(*activequery, HEX);
     Serial.print("DevID1c "); Serial.print(*DevID1c, HEX); Serial.print("  DevID2c "); Serial.println (*DevID2c, HEX);
-  }
+  #endif
 
   data_reporting_mode_query_SDS_cmd[3] = *queryset;
   data_reporting_mode_query_SDS_cmd[4] = *activequery;
   data_reporting_mode_query_SDS_cmd[15] = *DevID1c;
   data_reporting_mode_query_SDS_cmd[16] = *DevID2c;
 
-  if (DEBUG2 == true) {
+#ifdef DEBUG2
     Serial.print("queryset      ");  Serial.println(data_reporting_mode_query_SDS_cmd[3]);
     Serial.print("activequery   ");  Serial.println(data_reporting_mode_query_SDS_cmd[4]);
-  }
+  #endif
 
 
   int checksum_is = 0;
   checksum_is = data_reporting_mode_query_SDS_cmd[2] + data_reporting_mode_query_SDS_cmd[3] + data_reporting_mode_query_SDS_cmd[4] +   data_reporting_mode_query_SDS_cmd[15] + data_reporting_mode_query_SDS_cmd[16];
   data_reporting_mode_query_SDS_cmd[17] = checksum_is % 256;
 
-  if (DEBUG2 == true) {
+#ifdef DEBUG2
     Serial.print("checksum new  ");  Serial.println(data_reporting_mode_query_SDS_cmd[17]);
     Serial.print("Checksum_is % 256:  "); Serial.println(checksum_is % 256);
-  }
+  #endif
 
 
   // write buffer
@@ -130,10 +129,10 @@ int SDS011_vers::SetDataReportingMode(int *queryset, int *activequery, int *DevI
   sds_data->flush();  // write buffer to sensor
 
 
-  if (DEBUG2 == true) {
+#ifdef DEBUG2
     Serial.println("buffer written");
     Serial.println("__________________________________________________________________");
-  }
+  #endif
 
   //------------------------------------
 
@@ -154,9 +153,10 @@ int SDS011_vers::SetDataReportingMode(int *queryset, int *activequery, int *DevI
   //  Serial.println("warte auf Data Available 2");
   while (!sds_data->available() or z < 9 ) {
     delay(150); // Warten bis Daten da sind
-    if (DEBUG2 == true) {
+#ifdef DEBUG2
       Serial.print(".");                                               // Problem endlos weil sich sensor ncach cmd abschaltet ???
-    }
+    #endif
+
     z++; if (z >= 9) {
       break;
     };
@@ -180,9 +180,10 @@ int SDS011_vers::SetDataReportingMode(int *queryset, int *activequery, int *DevI
         for (uint8_t z = 1; z < 10; z++) {
           buffer = sds_data->read();
           antwort[z] = int(buffer);
-          if (DEBUG2 == true) {
+#ifdef DEBUG2
+ 
             Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-          }
+          #endif
         }
       }
 
@@ -216,13 +217,15 @@ int SDS011_vers::SetDataReportingMode(int *queryset, int *activequery, int *DevI
 
   //--------------------------
   yield();
-  if (DEBUG2 == true) {
+
+#ifdef DEBUG2
     //  Serial.println("________________________________________________________________--");
     Serial.print(" querysetr "); Serial.print(*querysetr, HEX); Serial.print("  activequeryr "); Serial.print(*activequeryr, HEX);
     Serial.print(" DevID1 "); Serial.print(*DevID1r, HEX); Serial.print("  DevID2 "); Serial.println (*DevID2r, HEX);
     //  Serial.println("_End of Queryactive Function_");
     //  Serial.println("__________________________________________________________________");
-  }
+  #endif
+
   return error;
 }  // END SDS011_vers::Setdatareportingmode
 
@@ -318,33 +321,32 @@ static byte QueryDataCMD[19] = {
 int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float *p10, int *DevID1r, int *DevID2r)
 {
 
-  bool DEBUG4 = false;
-  if (DEBUG4 == true) {
+#ifdef DEBUG4
     Serial.println(" ");
 
     Serial.println("_Begin QueryDataCommand Main Function_");
     Serial.print("DevID1c "); Serial.print(*DevID1c, HEX); Serial.print("DevID2c "); Serial.println (*DevID2c, HEX);
     // Serial.print("p25 "); Serial.print(*p25, HEX); Serial.print("p10 "); Serial.println(*p10, HEX);
     // Serial.print("DevID1r "); Serial.print(*DevID1r, HEX); Serial.print("DevID2r "); Serial.println (*DevID2r, HEX);
-  }
+  #endif
 
   QueryDataCMD[15] = *DevID1c;
   QueryDataCMD[16] = *DevID2c;
 
-  if (DEBUG4 == true) {
+#ifdef DEBUG4
     Serial.print("DevID1c     ");  Serial.println(QueryDataCMD[15], HEX);
     Serial.print("DevID2c     ");  Serial.println(QueryDataCMD[16], HEX);
-  }
+  #endif
 
 
   int checksum_is = 0;
   checksum_is = QueryDataCMD[2] + QueryDataCMD[3] + QueryDataCMD[4] + QueryDataCMD[15] + QueryDataCMD[16];
   QueryDataCMD[17] = checksum_is % 256;
 
-  if (DEBUG4 == true) {
+#ifdef DEBUG4
     Serial.print("checksum new ");  Serial.println(QueryDataCMD[17]);
     Serial.print("Checksum_is % 256:  "); Serial.println(checksum_is % 256);
-  }
+  #endif
 
 
   // write buffer
@@ -354,10 +356,10 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
   sds_data->flush();  // write buffer to sensor
 
 
-  if (DEBUG4 == true) {
+#ifdef DEBUG4
     Serial.println("buffer written");
     // Serial.println("__________________________________________________________________");
-  }
+  #endif
 
   //------------------------------------
 
@@ -378,9 +380,11 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
   //  Serial.println("warte auf Data Available 2");
   while (!sds_data->available() or z < 9 ) {
     delay(150); // Warten bis Daten da sind
-    if (DEBUG4 == true) {
+
+#ifdef DEBUG4
       Serial.print("-");
-    }
+    #endif
+
     z++; if (z >= 9) {
       break;
     };
@@ -404,9 +408,11 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
         for (uint8_t z = 1; z < 10; z++) {
           buffer = sds_data->read();
           antwort[z] = int(buffer);
-          if (DEBUG4 == true) {
+
+#ifdef DEBUG4
+     
             Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-          }
+          #endif
         }
       }
 
@@ -416,7 +422,7 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
       {
         checksum_is = antwort[2] + antwort[3] + antwort[4] + antwort[5] + antwort[6] + antwort[7];
 
-        if (DEBUG4 == true) {
+       #ifdef DEBUG4
           //Serial.print(" Ver2 all hex antwort checksum_is checksum_is % 256 ");
           //Serial.print(antwort[8], HEX); Serial.print(" = ");Serial.print(checksum_is, HEX);Serial.print(" = ");Serial.println(checksum_is % 256, HEX);
           Serial.println();
@@ -428,7 +434,7 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
           Serial.println();
           Serial.println(antwort[4], BIN); //low
           Serial.println();
-        }
+        #endif
 
         if (antwort[8] == checksum_is % 256)
         {
@@ -450,14 +456,15 @@ int SDS011_vers::QueryDataCommand(int *DevID1c, int *DevID2c, float *p25, float 
 
   //--------------------------
   yield();
-  if (DEBUG4 == true) {
+
+#ifdef DEBUG4
     Serial.println("________________________________________________________________--");
     Serial.print("DevID1c "); Serial.print(*DevID1c, HEX); Serial.print("DevID2c "); Serial.println (*DevID2c, HEX);
     Serial.print("p2.5 "); Serial.print(*p25, HEX); Serial.print("p10 "); Serial.println(*p10, HEX);
     Serial.print("DevID1r "); Serial.print(*DevID1r, HEX); Serial.print("DevID2r "); Serial.println (*DevID2r, HEX);
     Serial.println("_End of QueryDatacommand Function_");
     Serial.println("__________________________________________________________________");
-  }
+  #endif
   return error;
 }  // END SDS011_vers::querydatacommand
 
@@ -586,16 +593,15 @@ static byte SetDeviceIDCmd[19] = {
 
 
 int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *DevID2r  ) {
-  bool DEBUG5 = false;
+ 
 
-
-  if (DEBUG5 == true) {
+#ifdef DEBUG5
 
     Serial.println();
     Serial.println("_Begin SetDeviceID Main Function_");
     Serial.print("DevID1n "); Serial.print(*DevID1n, HEX); Serial.print("  DevID2n "); Serial.println(*DevID2n, HEX);
     Serial.print("DevID1r "); Serial.print(*DevID1r, HEX); Serial.print("  DevID2r "); Serial.println (*DevID2r, HEX);
-  }
+  #endif
 
   SetDeviceIDCmd[13] = *DevID1n;
   SetDeviceIDCmd[14] = *DevID2n;
@@ -603,20 +609,20 @@ int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *D
   SetDeviceIDCmd[16] = *DevID2r;
 
 
-  if (DEBUG5 == true) {
+#ifdef DEBUG5
     Serial.print("DevID1n     ");  Serial.println(SetDeviceIDCmd[13], HEX);
     Serial.print("DevID2n     ");  Serial.println(SetDeviceIDCmd[14], HEX);
-  }
+  #endif
 
 
   int checksum_is = 0;
   checksum_is = SetDeviceIDCmd[2] +  SetDeviceIDCmd[13] + SetDeviceIDCmd[14] + SetDeviceIDCmd[15] + SetDeviceIDCmd[16];
   SetDeviceIDCmd[17] = checksum_is % 256;
 
-  if (DEBUG5 == true) {
+#ifdef DEBUG5
     Serial.print("checksum new ");  Serial.println(SetDeviceIDCmd[17]);
     Serial.print("Checksum_is % 256:  "); Serial.println(checksum_is % 256);
-  }
+  #endif
 
 
   // write buffer
@@ -625,9 +631,9 @@ int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *D
   }
   sds_data->flush();  // write buffer to sensor
 
-  if (DEBUG5 == true) {
+#ifdef DEBUG5
     Serial.println("buffer written");
-  }
+  #endif
 
   //------------------------------------
 
@@ -666,17 +672,19 @@ int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *D
       // Serial.println(" indataok ");
       buffer = sds_data->read();
       value = int(buffer);
-      if (DEBUG5 == true) {
+
+#ifdef DEBUG5
         Serial.print("Value:  "); Serial.println(value, HEX);
-      }
+      #endif
       if (value = 0xAA )
       {
         for (uint8_t z = 1; z < 10; z++) {
           buffer = sds_data->read();
           antwort[z] = int(buffer);
-          if (DEBUG5 == true) {
+
+         #ifdef DEBUG5
             Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-          }
+          #endif
         }
       }
 
@@ -684,10 +692,10 @@ int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *D
       {
         checksum_is = antwort[2] + antwort[3] + antwort[4] + antwort[5] + antwort[6] + antwort[7];
 
-        if (DEBUG5 == true) {
+        #ifdef DEBUG5
           Serial.print(" Ver2 all hex antwort checksum_is checksum_is % 256 ");
           Serial.print(antwort[8], HEX); Serial.print(" = "); Serial.print(checksum_is, HEX); Serial.print(" = "); Serial.println(checksum_is % 256, HEX);
-        }
+        #endif
 
         if (antwort[8] == checksum_is % 256)
         {
@@ -709,13 +717,14 @@ int SDS011_vers::SetDeviceID(int *DevID1n,  int *DevID2n,  int *DevID1r,  int *D
   //--------------------------
   yield();
 
-  if (DEBUG5 == true) {
+#ifdef DEBUG5
     Serial.println(" ");
     Serial.print("DevID1n "); Serial.print(*DevID1n, HEX); Serial.print("  DevID2n "); Serial.print(*DevID2n, HEX);
     Serial.print("DevID1r "); Serial.print(*DevID1r, HEX); Serial.print("DevID2r "); Serial.println (*DevID2r, HEX);
     Serial.println("_End of SetDeviceID Function_");
 
-  }
+#endif
+
   return error;
 }  // END SDS011_vers::SetDeviceID
 //-----------------------------------------------------------------------------------------------------
@@ -765,9 +774,7 @@ static byte SLEEPCMD[19] = {
 
 int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, int *DevID2c, int *querysetr, int *sleepworkr, int *DevID1r, int *DevID2r) {
 
-  bool DEBUG6 = false;
-
-  if (DEBUG6 == true) {
+#ifdef DEBUG6
     Serial.println(" ");
 
     Serial.println("Begin SetSleepAndWork Main Function");
@@ -775,7 +782,7 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
     Serial.print("sleepworkc "); Serial.println(*sleepworkc);
     Serial.print("DevID1c    "); Serial.println(*DevID1c, HEX);
     Serial.print("DevID2c    "); Serial.println(*DevID2c, HEX);
-  }
+  #endif
 
   SLEEPCMD[3]  = *querysetc;
   SLEEPCMD[4]  = *sleepworkc;
@@ -783,10 +790,10 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
   SLEEPCMD[16] = *DevID2c;
 
 
-  if (DEBUG6 == true) {
+#ifdef DEBUG6
     Serial.print("queryset  [] ");  Serial.println(SLEEPCMD[3]);
     Serial.print("sleepwork [] ");  Serial.println(SLEEPCMD[4]);
-  }
+  #endif
 
 
   int checksum_is = 0;
@@ -795,10 +802,10 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
 
 
 
-  if (DEBUG6 == true) {
+#ifdef DEBUG6
     Serial.print("checksum new        ");  Serial.println(SLEEPCMD[17]);
     Serial.print("Checksum_is % 256:  "); Serial.println(checksum_is % 256);
-  }
+  #endif
 
 
   // write buffer
@@ -809,9 +816,9 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
 
 
 
-  if (DEBUG6 == true) {
+#ifdef DEBUG6
     Serial.println("buffer written");
-  }
+  #endif
 
   //------------------------------------
 
@@ -857,9 +864,10 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
         for (uint8_t z = 1; z < 10; z++) {
           buffer = sds_data->read();
           antwort[z] = int(buffer);
-          if (DEBUG6 == true) {
+
+          #ifdef DEBUG6
             Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-          }
+          #endif
         }
       }
 
@@ -868,10 +876,10 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
         checksum_is = antwort[2] + antwort[3] + antwort[4] + antwort[5] + antwort[6] + antwort[7];
 
 
-        if (DEBUG6 == true) {
+       #ifdef DEBUG6
           Serial.print(" antwort = checksum_is = checksum_is % 256 ");
           Serial.print(antwort[8], HEX); Serial.print(" = "); Serial.print(checksum_is, HEX); Serial.print(" = "); Serial.println(checksum_is % 256, HEX);
-        }
+        #endif
 
         if (antwort[8] == checksum_is % 256)
         {
@@ -889,7 +897,8 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
         }
       }
     }  // end while dataok
-    if (DEBUG6 == true) {
+
+   #ifdef DEBUG6
       Serial.println(antwort[3]);
       Serial.println(antwort[4]);
       Serial.println(antwort[6]);
@@ -900,7 +909,7 @@ int SDS011_vers::SetSleepAndWork(int *querysetc, int *sleepworkc, int *DevID1c, 
       Serial.print("DevID2     "); Serial.println(*DevID2r, HEX);
       Serial.println("End of SetSleepAndWork Function");
 
-    }
+    #endif
 
 
     //--------------------------
@@ -1047,7 +1056,8 @@ static byte check_FirmwareVersionCmd[19] = {
 
 int SDS011_vers::CheckFirmwareVersion(int *Y_ear, int *M_onth, int *D_ay,  int *D_evB1,  int *D_evB2)
 {
-  bool DEBUG7 = false;
+  
+
 
   // Befehl sammeln und schreiben
   for (uint8_t i = 0; i < 19; i++) {
@@ -1092,9 +1102,10 @@ int SDS011_vers::CheckFirmwareVersion(int *Y_ear, int *M_onth, int *D_ay,  int *
       for (uint8_t z = 1; z < 10; z++) {
         buffer = sds_data->read();
         antwort[z] = int(buffer);
-        if (DEBUG7 == true) {
+
+       #ifdef DEBUG7
           Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-        }
+        #endif
       }
     }
   }
@@ -1104,9 +1115,10 @@ int SDS011_vers::CheckFirmwareVersion(int *Y_ear, int *M_onth, int *D_ay,  int *
   {
     checksum_is = antwort[2] + antwort[3] + antwort[4] + antwort[5] + antwort[6] + antwort[7];
 
-    if (DEBUG7 == true) {
+    #ifdef DEBUG7
       Serial.print(" Ver2 all hex antwort checksum_is checksum_is % 256 ");    Serial.print(antwort[8], HEX); Serial.print(" = "); Serial.print(checksum_is, HEX); Serial.print(" = "); Serial.println(checksum_is % 256, HEX);
-    }
+    #endif
+
     if (antwort[8] == checksum_is % 256)
     {
       *Y_ear  = antwort[3];       // Year
@@ -1175,37 +1187,35 @@ static byte SetWorkingPeriod_SDS_cmd[19] = {
 //----------------------------------------------------
 int SDS011_vers::SetWorkingPeriod(int *queryset, int *contperiod, int *DevID1c, int *DevID2c, int *querysetr, int *contperiodr, int *DevID1r, int *DevID2r)
 {
-  bool DEBUG8 = false;
 
-
-  if (DEBUG8 == true) {
+#ifdef DEBUG8
 
     Serial.println(" ");
 
     Serial.println("_Begin SetWorkingPeriod Main Function_");
     Serial.print("queryset "); Serial.print(*queryset, HEX); Serial.print("contperiod "); Serial.println(*contperiod, HEX);
     Serial.print("DevID1c "); Serial.print(*DevID1c, HEX); Serial.print("DevID2c "); Serial.println (*DevID2c, HEX);
-  }
+  #endif
 
   SetWorkingPeriod_SDS_cmd[3] = *queryset;
   SetWorkingPeriod_SDS_cmd[4] = *contperiod;
   SetWorkingPeriod_SDS_cmd[15] = *DevID1c;
   SetWorkingPeriod_SDS_cmd[16] = *DevID2c;
 
-  if (DEBUG8 == true) {
+ #ifdef DEBUG8
     Serial.print("queryset     ");  Serial.println(SetWorkingPeriod_SDS_cmd[3]);
     Serial.print("contperiod   ");  Serial.println(SetWorkingPeriod_SDS_cmd[4]);
-  }
+  #endif
 
 
   int checksum_is = 0;
   checksum_is = SetWorkingPeriod_SDS_cmd[2] + SetWorkingPeriod_SDS_cmd[3] + SetWorkingPeriod_SDS_cmd[4] + SetWorkingPeriod_SDS_cmd[15] + SetWorkingPeriod_SDS_cmd[16];
   SetWorkingPeriod_SDS_cmd[17] = checksum_is % 256;
 
-  if (DEBUG8 == true) {
+ #ifdef DEBUG8
     Serial.print("checksum new ");  Serial.println(SetWorkingPeriod_SDS_cmd[17]);
     //Serial.print("Checksum_is % 256:  "); Serial.println(checksum_is % 256);
-  }
+  #endif
 
 
   // write buffer
@@ -1215,10 +1225,10 @@ int SDS011_vers::SetWorkingPeriod(int *queryset, int *contperiod, int *DevID1c, 
   sds_data->flush();  // write buffer to sensor
 
 
-  if (DEBUG8 == true) {
+  #ifdef DEBUG8
     Serial.println("buffer written");
     Serial.println("__________________________________________________________________");
-  }
+  #endif
   //------------------------------------
 
 
@@ -1262,9 +1272,9 @@ int SDS011_vers::SetWorkingPeriod(int *queryset, int *contperiod, int *DevID1c, 
         for (uint8_t z = 1; z < 10; z++) {
           buffer = sds_data->read();
           antwort[z] = int(buffer);
-          if (DEBUG8 == true) {
+         #ifdef DEBUG8
             Serial.print(" 0x");          Serial.println(antwort[z], HEX);
-          }
+          #endif
         }
       }
 
@@ -1299,11 +1309,11 @@ int SDS011_vers::SetWorkingPeriod(int *queryset, int *contperiod, int *DevID1c, 
   //--------------------------
   yield();
 
-  if (DEBUG8 == true) {
+#ifdef DEBUG8
     Serial.print("_querysetr_"); Serial.print(*querysetr, HEX); Serial.print("_contperiodr_"); Serial.print(*contperiodr, HEX);
     Serial.print("_DevID1_"); Serial.print(*DevID1r, HEX); Serial.print("_DevID2_"); Serial.println (*DevID2r, HEX);
     Serial.println("_End of SetWorkingPeriod Function_");
-  }
+  #endif
   return error;
 }  // END SDS011_vers::SetWorkingPeriod
 
@@ -1321,26 +1331,28 @@ int SDS011_vers::SetWorkingPeriod(int *queryset, int *contperiod, int *DevID1c, 
 // --------------------------------------------------------
 int SDS011_vers::SetContinuousMode() {
 
-  bool DEBUG81 = false;
+
   int queryset = 1;
   int contperiod = 0;
   int DevID1c = 0xFF;
   int DevID2c = 0xFF;
   int querysetr, contperiodr, DevID1r, DevID2r;
 
-  if (DEBUG81 == true) {
+#ifdef DEBUG81
     Serial.println("__________________________________________________________________");
     Serial.println("_Begin of SetContinuousMode_");
     Serial.print("_queryset_"); Serial.print(queryset, HEX); Serial.print("_contperiod_"); Serial.println(contperiod, HEX);
     Serial.print("_DevID1c_"); Serial.print(DevID1c, HEX); Serial.print("_DevID2c_"); Serial.println (DevID2c, HEX);
-  }
+  #endif
+
   int error = SDS011_vers::SetWorkingPeriod(&queryset, &contperiod, &DevID1c, &DevID2c, &querysetr, &contperiodr, &DevID1r, &DevID2r);
-  if (DEBUG81 == true) {
+
+#ifdef DEBUG81
     Serial.print("_querysetr_"); Serial.print(querysetr, HEX); Serial.print("_contperiodr_"); Serial.println(contperiodr, HEX);
     Serial.print("_DevID1r_"); Serial.print(DevID1r, HEX); Serial.print("_DevID2r_"); Serial.println (DevID2r, HEX);
     Serial.println("_End of SetContinuousMode_");
     Serial.println("__________________________________________________________________");
-  }
+  #endif
   return error;
 }
 
@@ -1351,33 +1363,33 @@ int SDS011_vers::SetContinuousMode() {
 // --------------------------------------------------------
 int SDS011_vers::SetWorkingPeriod3Min() {
 
-  bool DEBUG82 = false;
   int queryset = 1;
   int contperiod = 5;
   int DevID1c = 0xFF;
   int DevID2c = 0xFF;
   int querysetr, contperiodr, DevID1r, DevID2r;
 
-  if (DEBUG82 == true) {
+#ifdef DEBUG82
     Serial.println("__________________________________________________________________");
     Serial.println("_Begin of SetWorkingPeriod5Min_");
     Serial.print("_queryset_"); Serial.print(queryset, HEX); Serial.print("_contperiod_"); Serial.print(contperiod, HEX);
     Serial.print("_DevID1c_"); Serial.print(DevID1c, HEX); Serial.print("_DevID2c_"); Serial.println (DevID2c, HEX);
-  }
+  #endif
+
   int _error = SDS011_vers::SetWorkingPeriod(&queryset, &contperiod, &DevID1c, &DevID2c, &querysetr, &contperiodr, &DevID1r, &DevID2r);
 
-  if (DEBUG82 == true) {
+#ifdef DEBUG82
     Serial.print("_querysetr_"); Serial.print(querysetr, HEX); Serial.print("_contperiodr_"); Serial.print(contperiodr, HEX);
     Serial.print("_DevID1r_"); Serial.print(DevID1r, HEX); Serial.print("_DevID2r_"); Serial.println (DevID2r, HEX);
     Serial.println("_End of SetWorkingPeriod5Min_");
     Serial.println("__________________________________________________________________");
-  }
+  #endif
   return _error;
 }
 
 //--------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------
+//---EOF----------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
 
