@@ -57,6 +57,7 @@ It is to compare if and how data quality changes when reading 3 s (query reporti
 .. still in working progress ...
 
 
+Reference: https://cdn.sparkfun.com/assets/parts/1/2/2/7/5/Laser_Dust_Sensor_Control_Protocol_V1.3.pdf
 
 
 Similar and maybe more elegant implementations are recently found on 
